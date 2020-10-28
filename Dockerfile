@@ -6,13 +6,9 @@ ENV BR_URL https://buildroot.org/downloads/buildroot-2020.02.7.tar.gz
 
 RUN apt-get update && apt-get dist-upgrade -y
  
-RUN apt-get install -y wget curl git libncurses-dev cpio bc unzip locales texinfo libelf-dev
+RUN apt-get install -y wget file curl git libncurses-dev cpio bc unzip locales texinfo libelf-dev rsync build-essential expect pkg-config libarchive-tools m4 gawk bc bison flex python3 perl libtool autoconf automake autopoint autoconf-archive mtools liblzma-dev zlib1g-dev zlib1g xz-utils lzip gettext
 
-RUN apt-get install -y rsync build-essential expect pkg-config libarchive-tools m4 gawk bc bison flex texinfo python3 perl libtool autoconf automake autopoint autoconf-archive mtools liblzma-dev libelf-dev libssl-dev zlib1g-dev zlib1g xz-utils lzip file curl wget gettext
-
-RUN apt autoremove -y
-
-RUN rm -rf /var/lib/apt/lists/* && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+RUN apt autoremove -y && rm -rf /var/lib/apt/lists/* && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
 ENV LANG en_US.utf8
 
@@ -26,14 +22,16 @@ RUN mkdir -vp /home/builder/buildroot
 
 RUN wget $BR_URL && tar -xvf ./buildroot-*.tar.gz --strip 1 -C /home/builder/buildroot
 
-RUN mkdir -p /home/builder/pixie
+RUN mkdir -p /home/builder/src
 
-COPY . /home/builder/pixie
+COPY . /home/builder/src
 
 WORKDIR /home/builder/buildroot
 
-RUN cat /home/builder/pixie/pixieos_x86_64.config > .config
+RUN cp -vR /home/builder/src/rootfs_overlay /home/builder/buildroot
 
-RUN cat /home/builder/pixie/pixieos_x86_64.defconfig > .defconfig
+RUN cat /home/builder/src/pixieos_x86_64.config > /home/builder/buildroot/.config
+
+RUN cat /home/builder/src/pixieos_x86_64.defconfig > /home/builder/buildroot/.defconfig
 
 ENTRYPOINT make
