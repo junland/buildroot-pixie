@@ -8,7 +8,7 @@ RUN apt-get update && apt-get dist-upgrade -y
  
 RUN apt-get install -y wget file curl git libncurses-dev cpio bc unzip locales texinfo libelf-dev rsync build-essential expect pkg-config libarchive-tools m4 gawk bc bison flex python3 perl libtool autoconf automake autopoint autoconf-archive mtools liblzma-dev zlib1g-dev zlib1g xz-utils lzip gettext
 
-RUN apt autoremove -y && rm -rf /var/lib/apt/lists/* && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+RUN apt-get autoremove -y && rm -rf /var/lib/apt/lists/* && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
 ENV LANG en_US.utf8
 
