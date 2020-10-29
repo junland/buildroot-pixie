@@ -4,6 +4,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ENV BR_URL https://buildroot.org/downloads/buildroot-2020.02.7.tar.gz
 
+RUN dpkg --add-architecture i386
+
 RUN apt-get update && apt-get dist-upgrade -y
  
 RUN apt-get install -y wget file curl git bzr cvs mercurial subversion libncurses-dev libncurses5-dev libc6:i386 cpio bc unzip locales texinfo libelf-dev rsync build-essential expect pkg-config libarchive-tools m4 gawk bc bison flex python3 perl libtool autoconf automake autopoint autoconf-archive mtools liblzma-dev zlib1g-dev zlib1g xz-utils lzip gettext
