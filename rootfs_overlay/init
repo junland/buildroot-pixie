@@ -1,5 +1,8 @@
 #!/bin/sh
 
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+export PATH
+
 msg_info() {
   echo -e "\e[94m >>>> $1 \e[0m"
 }
@@ -21,10 +24,10 @@ msg_info "Mounting /sys..."
 mount -t sysfs sys /sys -o nosuid,noexec,nodev
 
 msg_info "Mounting /dev..."
-mount -t devtmpfs dev /dev -o mode=0755,nosuid
+mount -t devtmpfs dev /dev -o nosuid
 
 msg_info "Mounting /run..."
-mount -t tmpfs run /run -o nosuid,nodev,mode=0755
+mount -t tmpfs run /run -o nosuid,nodev
 
 msg_info "Setting up network..."
 udhcpc
