@@ -36,7 +36,9 @@ WORKDIR /home/builder/buildroot
 
 RUN cp -vR /home/builder/src/rootfs_overlay /home/builder/buildroot
 
-RUN cat /home/builder/src/pixieos_x86_64.config > /home/builder/buildroot/.config
+RUN cat /home/builder/src/pixieos_x86_64_EFI-linux.config  > /home/builder/buildroot/pixieos_x86_64_EFI-linux.config 
+
+RUN cat /home/builder/src/pixieos_x86_64_EFI.config > /home/builder/buildroot/.config
 
 RUN cat /home/builder/src/pixieos_x86_64.defconfig > /home/builder/buildroot/.defconfig
 
