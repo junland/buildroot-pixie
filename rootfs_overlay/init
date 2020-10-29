@@ -1,0 +1,57 @@
+#!/bin/sh
+# Note that /dev should be handled by devtmpfs
+# Make sure this file will be executable
+
+msg_info() {
+  echo -e "\e[94m >>>> $1 \e[0m"
+}
+
+msg_fail() {
+  echo -e "\e[31m >>>> $1 \e[0m"
+}
+
+# Hack to avoid job control error.
+# https://forums.gentoo.org/viewtopic-t-998098-start-0.html
+msg_info "Update shell settings..."
+setsid sh -c 'exec sh </dev/tty1 >/dev/tty1 2>&1' 
+
+msg_info "Mounting /proc..."
+mount -t proc none /proc
+msg_info "Mounting /sys..." 
+mount -t sysfs sysfs /sys
+msg_info "Mounting /dev..."
+mount -t devtmpfs devtmpfs /dev
+
+msg_info "Setting up console..."
+if (exec 0</dev/console) 2>/dev/null; then
+    exec 0</dev/console
+    exec 1>/dev/console
+    exec 2>/dev/console
+fi
+
+msg "Setting up network..."
+udhcpc
+
+msg "Waiting for system to catch up..."
+
+sleep 10
+
+while [ 1 ]; do
+    dialog --menu "What do you want to do" 0 0 0 \
+        shell           "Drop to shell" \
+        reboot          "Reboot" \
+        poweroff        "Shutdown" 2> /tmp/what_next
+    clear
+    
+    case $(cat /tmp/what_next) in
+        shell)
+            sh
+        ;;
+        reboot)
+            reboot -f
+        ;;
+        poweroff)
+            poweroff -f
+        ;;
+    esac
+done
